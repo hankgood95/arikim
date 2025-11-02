@@ -1,0 +1,452 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>김아리의 노란 하루 · v17.8</title>
+  <style>
+    :root{ --bg:#fff9cc; --text:#333; --accent:#ffd60a; --accent-dark:#ffca3a; --box:#fff; }
+    body.dark{ --bg:#1e1e1e; --text:#f1f1f1; --accent:#ffca3a; --accent-dark:#ffd60a; --box:#2b2b2b; }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:"Noto Sans KR",sans-serif; background:var(--bg); color:var(--text); transition:.25s}
+    header{position:relative; text-align:center; background:var(--accent); color:#5a4e00; padding:30px}
+    #darkToggle{position:absolute; right:18px; top:18px; background:none; border:none; font-size:22px; cursor:pointer}
+    nav{display:flex; justify-content:center; gap:8px; flex-wrap:wrap; background:var(--box); padding:10px}
+    nav button{background:var(--accent); border:none; border-radius:999px; padding:8px 14px; color:#5a4e00; font-weight:700; cursor:pointer}
+    nav button:hover{background:var(--accent-dark)}
+    main{max-width:1000px; margin:28px auto; padding:0 14px}
+
+    /* 홈 */
+    .home-grid{display:grid; grid-template-columns: 3fr 7fr; gap:16px}
+    .card{background:var(--box); border:1px solid #e8e8e8; border-radius:14px; padding:16px}
+    .intro-img{width:160px; height:160px; object-fit:cover; border-radius:12px; border:1px solid #ddd}
+    .intro-wrap{display:flex; gap:16px; align-items:center}
+    .intro-text{font-size:14px; line-height:1.6}
+    .right-grid{display:grid; grid-template-rows: 1fr 1fr; gap:16px; min-height:340px}
+    .pinned-list .item{font-size:14px; padding:8px 10px; border-radius:10px; border:1px solid #eee; margin-bottom:8px; cursor:pointer; background:var(--box)}
+    .pinned-list .item:hover{background:var(--accent-dark); color:#5a4e00}
+    .gallery{display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:10px}
+    .tile{border:1px solid #ddd; border-radius:10px; overflow:hidden; background:#fff; cursor:pointer}
+    .tile img{display:block; width:100%; height:100px; object-fit:cover}
+    .tile .cap{padding:6px 8px; font-size:12px; color:#555; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+
+    /* 목록/보기 */
+    .post-item{cursor:pointer; padding:12px; border-bottom:1px solid #eaeaea; border-radius:8px; background:var(--box)}
+    .post-item:hover{background:var(--accent-dark); color:#5a4e00}
+    .preview{max-width:360px; border:1px solid #ddd; border-radius:10px}
+    .like-btn{cursor:pointer; font-size:18px; background:none; border:none}
+    .like-btn.active{color:red}
+    .sort-box{text-align:right; margin:10px 0}
+    textarea,input,select{width:100%; max-width:720px; padding:10px; border-radius:10px; border:1px solid #cfcfcf; background:var(--box); color:var(--text)}
+    .date-text{font-size:13px; color:#777}
+    .btn{background:var(--accent); color:#5a4e00; border:none; border-radius:10px; padding:8px 12px; font-weight:700; cursor:pointer}
+    .btn:hover{background:var(--accent-dark)}
+
+    /* 댓글 */
+    .comments{margin-top:14px; text-align:left}
+    .comment{border-top:1px solid #ddd; padding:10px 4px}
+    .comment strong{color:#5a4e00}
+    .comment-form{margin-top:10px; display:grid; gap:8px}
+    .row{display:flex; gap:10px; align-items:center}
+    .muted{font-size:12px; color:#888}
+
+    /* 팝업 */
+    .popup{position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; justify-content:center; align-items:center; z-index:1000}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌼 김아리의 노란 하루</h1>
+    <button id="darkToggle" onclick="toggleDark()">🌙</button>
+    <p>따뜻한 노란빛 속에 하루를 기록해요 💛</p>
+  </header>
+
+  <nav>
+    <button onclick="showSection('home')">🏠 홈</button>
+    <button onclick="showSection('write')">✏️ 글쓰기</button>
+    <button onclick="showCategory('broadcast')">🎤 방송부</button>
+    <button onclick="showCategory('cute')">🐾 귀여운 것들</button>
+    <button onclick="showCategory('school')">🏫 학교 생활</button>
+    <button onclick="showCategory('daily')">💭 하루 기록</button>
+  </nav>
+
+  <main>
+    <!-- 홈 -->
+    <section id="home">
+      <div class="home-grid">
+        <!-- 왼쪽: 자기소개 -->
+        <div class="card">
+          <h3>🐱 아리의 자기소개</h3>
+          <div class="intro-wrap">
+            <img class="intro-img" src="CUTE-CAT.jfif" alt="아리의 귀여운 사진">
+            <div class="intro-text">
+              안녕! 나는 <b>아리</b>야.<br>
+              방문해줘서 고마워! 재밌게 봐줘 💛<br><br>
+              왼쪽 메뉴에서 글쓰기도 할 수 있고,<br>
+              오른쪽엔 내가 고정한 글과 사진 갤러리가 있어!
+            </div>
+          </div>
+        </div>
+
+        <!-- 오른쪽: 고정 + 갤러리 -->
+        <div class="right-grid">
+          <div class="card">
+            <h3>📌 고정된 글</h3>
+            <div id="homePinned" class="pinned-list"></div>
+          </div>
+          <div class="card">
+            <h3>📸 사진 갤러리</h3>
+            <div id="homeGallery" class="gallery"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 글쓰기 -->
+    <section id="write" style="display:none;">
+      <h2>✏️ 새 글쓰기</h2>
+      <select id="category">
+        <option value="broadcast">🎤 방송부 이야기</option>
+        <option value="cute">🐾 귀여운 것들</option>
+        <option value="school">🏫 학교 생활</option>
+        <option value="daily">💭 하루 기록</option>
+      </select>
+      <input id="title" placeholder="제목을 입력하세요">
+      <textarea id="content" placeholder="내용을 입력하세요"></textarea>
+
+      <!-- 📌 글자 옆 체크박스 -->
+      <label for="pinPost" style="display:flex; cursor:pointer; font-weight:600; margin:8px 0;">
+        📌 고정하기
+        <input type="checkbox" id="pinPost" style="cursor:pointer;float:left">
+      </label>
+
+      <button class="btn" onclick="openEmojiPopup()">😊 이모티콘</button>
+      <input type="file" id="imageInput" accept="image/*">
+      <img id="preview" class="preview" alt="">
+      <button class="btn" onclick="savePost()">저장하기</button>
+    </section>
+
+    <!-- 카테고리 -->
+    <section id="categoryView" style="display:none;">
+      <h2 id="categoryTitle"></h2>
+      <div class="sort-box">
+        <select id="sortSelect" onchange="renderList()">
+          <option value="latest">최신순</option>
+          <option value="oldest">오래된순</option>
+          <option value="likes">좋아요순</option>
+        </select>
+      </div>
+
+      <div id="postList"></div>
+
+      <div id="viewPost" style="display:none;">
+        <h3 id="viewTitle"></h3>
+        <p class="date-text" id="viewDate"></p>
+        <p id="viewContent"></p>
+        <img id="viewImage" class="preview" alt="">
+        <br>
+        <button class="like-btn" id="likeBtn" onclick="toggleLike()">❤️ 좋아요 (<span id="likeCount">0</span>)</button>
+        <br>
+        <button class="btn" onclick="requestEdit()">✏️ 수정</button>
+        <button class="btn" onclick="requestDelete()">🗑️ 삭제</button>
+        <button class="btn" onclick="backToList()">목록으로</button>
+
+        <!-- 💬 댓글 -->
+        <div class="comments">
+          <h4>💬 댓글</h4>
+          <div id="commentList"></div>
+          <div class="comment-form">
+            <div class="row">
+              <input id="commentName" placeholder="이름 (비워도 됨)" style="max-width:280px">
+              <label><input type="checkbox" id="anonymous"> 익명으로 쓰기</label>
+            </div>
+            <textarea id="commentText" placeholder="댓글을 입력하세요"></textarea>
+            <div class="row">
+              <button class="btn" onclick="addComment()">댓글 등록</button>
+              <span class="muted">이름을 비워두거나 ‘익명으로 쓰기’를 체크하면 “익명”으로 등록돼요.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 수정 팝업 -->
+  <div id="popup" class="popup" style="display:none;">
+    <div class="card" style="max-width:520px; width:92%;">
+      <h3>✏️ 글 수정</h3>
+      <input id="editTitle">
+      <textarea id="editContent"></textarea>
+      <label for="editPin" style="display:flex; align-items:center; gap:6px; justify-content:center; cursor:pointer; font-weight:600; margin:8px 0;">
+        📌 고정하기
+        <input type="checkbox" id="editPin" style="transform:scale(1.15); cursor:pointer;">
+      </label>
+      <input type="file" id="editImageInput" accept="image/*">
+      <img id="editPreview" class="preview" alt="">
+      <br>
+      <button class="btn" onclick="saveEdit()">저장</button>
+      <button class="btn" onclick="closePopup()">닫기</button>
+    </div>
+  </div>
+
+  <!-- 이모티콘 팝업 -->
+  <div id="emojiPopup" class="popup" style="display:none;">
+    <div class="card" style="max-width:520px; width:92%;">
+      <h3>😊 이모티콘 선택</h3>
+      <div class="emoji-grid" id="emojiGrid" style="display:grid; grid-template-columns:repeat(8,1fr); gap:10px;"></div>
+      <br><button class="btn" onclick="closeEmojiPopup()">닫기</button>
+    </div>
+  </div>
+
+  <script>
+    /* ===== 스토리지 헬퍼 ===== */
+    const CAT_KEYS=['broadcast','cute','school','daily'];
+    const sections=['home','write','categoryView'];
+    let currentCategory=null, posts=[], currentIndex=null;
+
+    const getKey = cat => 'posts_'+cat;
+    const safeParse = (j,f=[]) => { try{const v=JSON.parse(j); return Array.isArray(v)?v:f;}catch{return f;} };
+    const getPosts = cat => safeParse(localStorage.getItem(getKey(cat)),[]);
+    const setPosts = (cat,arr) => localStorage.setItem(getKey(cat), JSON.stringify(arr||[]));
+
+    function ensureIds(cat){
+      const arr=getPosts(cat); let changed=false;
+      arr.forEach(p=>{
+        if(!p.id){ p.id='p_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8); changed=true; }
+        if(typeof p.likeCount!=='number') { p.likeCount = p.likeCount?Number(p.likeCount):0; changed=true; }
+        if(typeof p.liked!=='boolean') { p.liked=false; changed=true; }
+        if(typeof p.pinned!=='boolean') { p.pinned=!!p.pinned; changed=true; }
+        if(!Array.isArray(p.comments)) { p.comments=[]; changed=true; }
+      });
+      if(changed) setPosts(cat,arr);
+      return arr;
+    }
+    CAT_KEYS.forEach(k=>ensureIds(k));
+
+    /* ===== 라우팅 ===== */
+    function showSection(n){
+      sections.forEach(s=>document.getElementById(s).style.display='none');
+      document.getElementById(n).style.display='block';
+      if(n==='home') renderHome();
+    }
+
+    function showCategory(cat){
+      showSection('categoryView');
+      currentCategory=cat;
+      localStorage.setItem('lastCategory',cat);
+      document.getElementById('categoryTitle').textContent =
+        cat==='broadcast'?'🎤 방송부 이야기':
+        cat==='cute'?'🐾 귀여운 것들':
+        cat==='school'?'🏫 학교 생활':'💭 하루 기록';
+      posts=ensureIds(cat);
+      renderList();
+      document.getElementById('postList').style.display='block';
+      document.getElementById('viewPost').style.display='none';
+    }
+
+    /* ===== 홈 렌더 ===== */
+    function renderHome(){
+      renderHomePinned();
+      renderHomeGallery();
+    }
+    function renderHomePinned(){
+      const box=document.getElementById('homePinned');
+      let all=[]; CAT_KEYS.forEach(c=>ensureIds(c).forEach(p=>all.push({...p,cat:c})));
+      const pinned=all.filter(p=>p.pinned).slice(0,3);
+      if(!pinned.length){ box.innerHTML='<p>고정된 글이 없어요 📌</p>'; return; }
+      box.innerHTML=pinned.map(p=>`<div class="item" onclick="openById('${p.cat}','${p.id}')">📌 ${p.title} <span style="font-size:12px;color:#888">· ${p.date||''}</span></div>`).join('');
+    }
+    function renderHomeGallery(){
+      const wrap=document.getElementById('homeGallery'); wrap.innerHTML='';
+      let all=[]; CAT_KEYS.forEach(c=>ensureIds(c).forEach(p=>all.push({...p,cat:c})));
+      const withImg=all.filter(p=>p.image);
+      if(!withImg.length){ wrap.innerHTML='<p>아직 사진이 없어요 📷</p>'; return; }
+      wrap.innerHTML=withImg.map(p=>`
+        <div class="tile" onclick="openById('${p.cat}','${p.id}')">
+          <img src="${p.image}" alt="${p.title}">
+          <div class="cap">${p.title}</div>
+        </div>`).join('');
+    }
+    function openById(cat,id){
+      showCategory(cat);
+      const idx=posts.findIndex(p=>p.id===id);
+      if(idx>=0) openPost(idx);
+    }
+
+    /* ===== 목록/정렬 ===== */
+    function renderList(){
+      const sort=document.getElementById('sortSelect').value;
+      let arr=[...posts];
+      arr.sort((a,b)=>{
+        if(sort==='latest') return new Date(b.date)-new Date(a.date);
+        if(sort==='oldest') return new Date(a.date)-new Date(b.date);
+        if(sort==='likes')  return (b.likeCount||0)-(a.likeCount||0);
+        return 0;
+      });
+      const seq=[...arr.filter(p=>p.pinned), ...arr.filter(p=>!p.pinned)];
+      const list=document.getElementById('postList');
+      if(!seq.length){ list.innerHTML='<p>아직 글이 없어요 🐷</p>'; return; }
+      list.innerHTML=seq.map(p=>{
+        const i=posts.indexOf(p);
+        return `<div class="post-item" onclick="openPost(${i})">${p.pinned?'📌 ':''}📅 ${p.date||''} · ${p.title}</div>`;
+      }).join('');
+    }
+
+    /* ===== 보기/좋아요/수정/삭제 ===== */
+    function openPost(i){
+      currentIndex=i;
+      const p=posts[i];
+      document.getElementById('viewTitle').textContent=p.title;
+      document.getElementById('viewDate').textContent='작성일: '+(p.date||'');
+      document.getElementById('viewContent').textContent=p.content||'';
+      document.getElementById('viewImage').src=p.image||'';
+      document.getElementById('postList').style.display='none';
+      document.getElementById('viewPost').style.display='block';
+      updateLikeDisplay();
+      renderComments();
+    }
+    function backToList(){
+      posts=ensureIds(currentCategory);
+      document.getElementById('viewPost').style.display='none';
+      document.getElementById('postList').style.display='block';
+      renderList();
+    }
+    function requestDelete(){
+      if(!confirm('이 글을 삭제할까요?')) return;
+      posts.splice(currentIndex,1);
+      setPosts(currentCategory,posts);
+      alert('삭제 완료 🗑️');
+      backToList(); renderHome();
+    }
+    function requestEdit(){ openEditPopup(); }
+
+    /* ===== 글쓰기/수정 ===== */
+    document.getElementById('imageInput').addEventListener('change',function(){
+      const f=this.files[0]; if(!f) return;
+      const r=new FileReader(); r.onload=e=>document.getElementById('preview').src=e.target.result; r.readAsDataURL(f);
+    });
+    function savePost(){
+      const catEl=document.getElementById('category');
+      const cat=(catEl && catEl.value)? String(catEl.value): 'daily';
+      const arr=ensureIds(cat);
+      const now=new Date();
+      const date=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+      const newPost={
+        id:'p_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),
+        title:(document.getElementById('title').value||'제목 없음').trim(),
+        content:document.getElementById('content').value,
+        image:document.getElementById('preview').src||'',
+        date, likeCount:0, liked:false,
+        pinned:document.getElementById('pinPost').checked,
+        comments:[]
+      };
+      arr.unshift(newPost); setPosts(cat,arr);
+      document.getElementById('title').value='';
+      document.getElementById('content').value='';
+      document.getElementById('preview').src='';
+      document.getElementById('imageInput').value='';
+      document.getElementById('pinPost').checked=false;
+      alert('저장 완료 💛');
+      showCategory(cat);
+      renderHome();
+    }
+    function openEditPopup(){
+      const p=posts[currentIndex];
+      document.getElementById('editTitle').value=p.title;
+      document.getElementById('editContent').value=p.content;
+      document.getElementById('editPin').checked=!!p.pinned;
+      document.getElementById('editPreview').src=p.image||'';
+      document.getElementById('popup').style.display='flex';
+    }
+    function closePopup(){ document.getElementById('popup').style.display='none'; }
+    document.getElementById('editImageInput').addEventListener('change',function(){
+      const f=this.files[0]; if(!f) return;
+      const r=new FileReader(); r.onload=e=>document.getElementById('editPreview').src=e.target.result; r.readAsDataURL(f);
+    });
+    function saveEdit(){
+      const t=document.getElementById('editTitle').value.trim();
+      const c=document.getElementById('editContent').value.trim();
+      const i=document.getElementById('editPreview').src;
+      const pin=document.getElementById('editPin').checked;
+      const old=posts[currentIndex];
+      posts[currentIndex]={...old, title:t||old.title, content:c, image:i, pinned:pin};
+      setPosts(currentCategory,posts);
+      alert('수정 완료 💛');
+      closePopup();
+      openPost(currentIndex);
+      renderHome();
+    }
+
+    function toggleLike(){
+      const p=posts[currentIndex];
+      p.liked=!p.liked;
+      p.likeCount=(p.likeCount||0)+(p.liked?1:-1);
+      if(p.likeCount<0) p.likeCount=0;
+      setPosts(currentCategory,posts);
+      updateLikeDisplay();
+    }
+    function updateLikeDisplay(){
+      const p=posts[currentIndex];
+      document.getElementById('likeCount').textContent=p.likeCount||0;
+      document.getElementById('likeBtn').classList.toggle('active',!!p.liked);
+    }
+
+    /* ===== 댓글 ===== */
+    function addComment(){
+      const nameInput=document.getElementById('commentName').value.trim();
+      const text=document.getElementById('commentText').value.trim();
+      const isAnon=document.getElementById('anonymous').checked;
+      if(!text) return alert("댓글 내용을 입력하세요");
+      const name = isAnon ? '익명' : (nameInput || '익명');
+      const now = new Date();
+      const ts = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+      const p=posts[currentIndex];
+      p.comments=p.comments||[];
+      p.comments.push({name, content:text, date:ts});
+      setPosts(currentCategory,posts);
+      document.getElementById('commentName').value='';
+      document.getElementById('commentText').value='';
+      document.getElementById('anonymous').checked=false;
+      renderComments();
+    }
+    function renderComments(){
+      const p=posts[currentIndex];
+      const list=document.getElementById('commentList');
+      if(!p.comments || !p.comments.length){
+        list.innerHTML='<p class="muted">아직 댓글이 없어요. 첫 댓글의 주인공이 되어줘! 💛</p>'; return;
+      }
+      list.innerHTML=p.comments.map(c=>(
+        `<div class="comment"><strong>${c.name}</strong> <span class="muted">${c.date||''}</span><br>${c.content}</div>`
+      )).join('');
+    }
+
+    /* ===== 이모티콘 ===== */
+    const emojis="😀😁😂🤣😅😊😋😍😘😎😇🥰🤩😜😝🙂🙃😉😌😴😪😆😮😲😭😡😺😻🐶🐱🐷🐰🐻🐼🐸🐥🍀🌸🌼🌈🍎🍩🍰☕🍔🍟🎬🎧🎵💌💖💛💙💜💤✨🔥💧⭐🎉".split("");
+    document.getElementById('emojiGrid').innerHTML = emojis.map(e=>`<span style="font-size:24px; cursor:pointer" onclick="insertEmoji('${e}')">${e}</span>`).join('');
+    function openEmojiPopup(){document.getElementById('emojiPopup').style.display='flex';}
+    function closeEmojiPopup(){document.getElementById('emojiPopup').style.display='none';}
+    function insertEmoji(e){
+      const c=document.getElementById('content');
+      const s=c.selectionStart||c.value.length, d=c.selectionEnd||c.value.length;
+      c.value=c.value.slice(0,s)+e+c.value.slice(d);
+      c.focus(); c.selectionStart=c.selectionEnd=s+e.length;
+      closeEmojiPopup();
+    }
+
+    /* ===== 다크 모드 ===== */
+    function toggleDark(){
+      document.body.classList.toggle('dark');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+    }
+    if(localStorage.getItem('darkMode')==='true') document.body.classList.add('dark');
+
+    /* ===== 시작 ===== */
+    window.addEventListener('load',()=>{
+      const last=localStorage.getItem('lastCategory');
+      if(last && CAT_KEYS.includes(last)) showCategory(last);
+      else showSection('home');
+    });
+  </script>
+</body>
+</html>

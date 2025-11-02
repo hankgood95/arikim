@@ -1,0 +1,11 @@
+.preview {
+  max-width: 360px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(8,1fr);
+  gap: 10px;
+}

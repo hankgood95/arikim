@@ -1,0 +1,70 @@
+.post-item {
+  cursor: pointer;
+  padding: 12px;
+  border-bottom: 1px solid #eaeaea;
+  border-radius: 8px;
+  background: var(--box);
+}
+
+.post-item:hover {
+  background: var(--accent-dark);
+  color: #5a4e00;
+}
+
+.preview {
+  max-width: 360px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.like-btn {
+  cursor: pointer;
+  font-size: 18px;
+  background: none;
+  border: none;
+}
+
+.like-btn.active {
+  color: red;
+}
+
+.sort-box {
+  text-align: right;
+  margin: 10px 0;
+}
+
+.date-text {
+  font-size: 13px;
+  color: #777;
+}
+
+.comments {
+  margin-top: 14px;
+  text-align: left;
+}
+
+.comment {
+  border-top: 1px solid #ddd;
+  padding: 10px 4px;
+}
+
+.comment strong {
+  color: #5a4e00;
+}
+
+.comment-form {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.muted {
+  font-size: 12px;
+  color: #888;
+}

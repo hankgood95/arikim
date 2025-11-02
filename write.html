@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>글쓰기 · 김아리의 노란 하루</title>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/write.css">
+</head>
+<body>
+  <header>
+    <h1>🌼 김아리의 노란 하루</h1>
+    <button id="darkToggle" onclick="toggleDark()">🌙</button>
+    <p>따뜻한 노란빛 속에 하루를 기록해요 💛</p>
+  </header>
+
+  <nav>
+    <button onclick="location.href='index.html'">🏠 홈</button>
+    <button onclick="location.href='write.html'">✏️ 글쓰기</button>
+    <button onclick="location.href='category.html?cat=broadcast'">🎤 방송부</button>
+    <button onclick="location.href='category.html?cat=cute'">🐾 귀여운 것들</button>
+    <button onclick="location.href='category.html?cat=school'">🏫 학교 생활</button>
+    <button onclick="location.href='category.html?cat=daily'">💭 하루 기록</button>
+  </nav>
+
+  <main>
+    <section id="write">
+      <h2>✏️ 새 글쓰기</h2>
+      <select id="category">
+        <option value="broadcast">🎤 방송부 이야기</option>
+        <option value="cute">🐾 귀여운 것들</option>
+        <option value="school">🏫 학교 생활</option>
+        <option value="daily">💭 하루 기록</option>
+      </select>
+      <input id="title" placeholder="제목을 입력하세요">
+      <textarea id="content" placeholder="내용을 입력하세요"></textarea>
+
+      <label for="pinPost" style="display:flex; align-items:center; cursor:pointer; font-weight:600; margin:8px 0;">
+        📌 고정하기 <input type="checkbox" id="pinPost" style="cursor:pointer; margin-left:4px;">
+      </label>
+
+      <button class="btn" onclick="openEmojiPopup()">😊 이모티콘</button>
+      <input type="file" id="imageInput" accept="image/*">
+      <img id="preview" class="preview" alt="">
+      <button class="btn" onclick="savePost()">저장하기</button>
+    </section>
+  </main>
+
+  <!-- 이모티콘 팝업 -->
+  <div id="emojiPopup" class="popup" style="display:none;">
+    <div class="card" style="max-width:520px; width:92%;">
+      <h3>😊 이모티콘 선택</h3>
+      <div class="emoji-grid" id="emojiGrid"></div>
+      <br><button class="btn" onclick="closeEmojiPopup()">닫기</button>
+    </div>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/write.js"></script>
+</body>
+</html>

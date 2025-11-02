@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>김아리의 노란 하루 · v17.8</title>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+  <header>
+    <h1>🌼 김아리의 노란 하루</h1>
+    <button id="darkToggle" onclick="toggleDark()">🌙</button>
+    <p>따뜻한 노란빛 속에 하루를 기록해요 💛</p>
+  </header>
+
+  <nav>
+    <button onclick="location.href='index.html'">🏠 홈</button>
+    <button onclick="location.href='write.html'">✏️ 글쓰기</button>
+    <button onclick="location.href='category.html?cat=broadcast'">🎤 방송부</button>
+    <button onclick="location.href='category.html?cat=cute'">🐾 귀여운 것들</button>
+    <button onclick="location.href='category.html?cat=school'">🏫 학교 생활</button>
+    <button onclick="location.href='category.html?cat=daily'">💭 하루 기록</button>
+  </nav>
+
+  <main>
+    <section id="home">
+      <div class="home-grid">
+        <!-- 왼쪽: 자기소개 -->
+        <div class="card">
+          <h3>🐱 아리의 자기소개</h3>
+          <div class="intro-wrap">
+            <img class="intro-img" src="img/cat1.png" alt="아리의 귀여운 사진">
+            <div class="intro-text">
+              안녕! 나는 <b>아리</b>야.<br>
+              방문해줘서 고마워! 재밌게 봐줘 💛<br><br>
+              왼쪽 메뉴에서 글쓰기도 할 수 있고,<br>
+              오른쪽엔 내가 고정한 글과 사진 갤러리가 있어!
+            </div>
+          </div>
+        </div>
+
+        <!-- 오른쪽: 고정 + 갤러리 -->
+        <div class="right-grid">
+          <div class="card">
+            <h3>📌 고정된 글</h3>
+            <div id="homePinned" class="pinned-list"></div>
+          </div>
+          <div class="card">
+            <h3>📸 사진 갤러리</h3>
+            <div id="homeGallery" class="gallery"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/common.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>
