@@ -9,3 +9,31 @@
   grid-template-columns: repeat(8,1fr);
   gap: 10px;
 }
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+  .preview {
+    max-width: 100%;
+  }
+
+  .emoji-grid {
+    grid-template-columns: repeat(6,1fr);
+    gap: 8px;
+  }
+
+  #category,
+  #title,
+  #content {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .btn {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  #imageInput {
+    width: 100%;
+  }
+}
