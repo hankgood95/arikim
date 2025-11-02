@@ -70,6 +70,7 @@ main {
   margin: 28px auto;
   padding: 0 14px;
   width: 100%;
+  box-sizing: border-box;
 }
 
 /* 모바일 대응 */
